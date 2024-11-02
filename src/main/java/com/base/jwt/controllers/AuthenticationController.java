@@ -25,18 +25,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<User> signUp(@RequestBody UserDto userDto) {
         LOGGER.info("register request initiated. user: {}", userDto.getEmail());
-        User registeredUser = authenticationService.signup(userDto);
+        User registeredUser = authenticationService.signUp(userDto);
         LOGGER.info("register request processed. user: {}", userDto.getEmail());
 
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody UserDto userDto) {
+    public ResponseEntity<LoginResponse> signIn(@RequestBody UserDto userDto) {
         LOGGER.info("login request initiated. user: {}", userDto.getEmail());
-        LoginResponse loginResponse = authenticationService.authenticate(userDto);
+        LoginResponse loginResponse = authenticationService.signIn(userDto);
         LOGGER.info("login request processed. user: {}", userDto.getEmail());
 
         return ResponseEntity.ok(loginResponse);

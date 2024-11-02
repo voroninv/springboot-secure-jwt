@@ -38,6 +38,15 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRole);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Role> update(@PathVariable Integer id, @RequestBody Role role) {
+        LOGGER.info("update role: {} request initiated.", role.getName());
+        Role savedRole = roleService.update(id, role);
+        LOGGER.info("update role: {} request processed.", role.getName());
+
+        return ResponseEntity.ok(savedRole);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         LOGGER.info("delete role id: {} request initiated.", id);

@@ -2,6 +2,7 @@ package com.base.jwt.exceptions;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -32,6 +34,20 @@ public class GlobalExceptionHandler {
         LOGGER.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
 
         return new ResponseEntity<>("Bad credentials exception.", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExistingUserException.class)
+    public ResponseEntity<Object> handleExistingUserException(ExistingUserException ex) {
+        LOGGER.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+
+        return new ResponseEntity<>("User already exists.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class, EntityNotFoundException.class})
+    public ResponseEntity<Object> handleUsernameNotFoundException(RuntimeException ex) {
+        LOGGER.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AccountStatusException.class)

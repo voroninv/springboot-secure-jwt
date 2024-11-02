@@ -18,11 +18,11 @@ public class AuthenticationService {
     @Autowired
     UserService userService;
 
-    public User signup(UserDto userDto) {
+    public User signUp(UserDto userDto) {
         return userService.save(userDto);
     }
 
-    public LoginResponse authenticate(UserDto userDto) {
+    public LoginResponse signIn(UserDto userDto) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userDto.getEmail(),

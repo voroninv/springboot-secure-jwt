@@ -5,6 +5,7 @@ import com.base.jwt.models.User;
 import com.base.jwt.models.UserPrincipal;
 import com.base.jwt.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/me")
     public ResponseEntity<UserPrincipal> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -29,6 +31,7 @@ public class UserController {
         return ResponseEntity.ok(currentUser);
     }
 
+    @PreAuthorize("hasAuthority('READ')")
     @GetMapping
     public ResponseEntity<List<User>> allUsers() {
         List<User> users = userService.findAll();
@@ -36,6 +39,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('DELETE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.delete(id);

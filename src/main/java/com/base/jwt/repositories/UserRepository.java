@@ -14,6 +14,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("select u from User u left join fetch u.roles r left join fetch r.permissions")
     List<User> findAll();
 
-    // todo add query
+    @Query("select u from User u left join fetch u.roles r left join fetch r.permissions where u.email = ?1")
     Optional<User> findByEmail(String email);
 }

@@ -1,10 +1,13 @@
 package com.base.jwt.models;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserPrincipal implements UserDetails {
 
@@ -17,7 +20,13 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return user.getRoles().stream()
+                .flatMap(role -> Stream.concat(
+                        Stream.of(new SimpleGrantedAuthority(role.getName())),
+                        role.getPermissions().stream()
+                                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                ))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -28,5 +37,9 @@ public class UserPrincipal implements UserDetails {
     @Override
     public String getUsername() {
         return user.getEmail();
+    }
+
+    public Set<Role> getRoles() {
+        return user.getRoles();
     }
 }
